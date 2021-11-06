@@ -9,7 +9,7 @@ import java.util.Arrays;
 
 public class Example {
 
-    public static void main(String[] args) {
+    public Example() {
         JsonConfigAPI instance = JsonConfigAPI.getInstance();
         instance.registerConfigsByAnnotation(Example.class);
 
