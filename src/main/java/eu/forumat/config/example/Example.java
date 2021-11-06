@@ -39,21 +39,21 @@ public class Example {
                 ))
         );
         instance.saveConfig(storageExample);
-        printCountryPopulations(storageExample);
+        printCountryPopulation(storageExample);
 
         Person laura = new Person("Laura", 17, Gender.FEMALE, "Polizistin");
         //Add new person to a country
         storageExample.getCountryPopulation().get("Österreich").add(laura);
         instance.saveConfig(storageExample);
-        printCountryPopulations(storageExample);
+        printCountryPopulation(storageExample);
 
         //Change name of a person
         storageExample.getCountryPopulation().get("Österreich").stream().filter(person -> person.getName().equals("Laura")).findAny().orElse(laura).setName("Julia");
         instance.saveConfig(storageExample);
-        printCountryPopulations(storageExample);
+        printCountryPopulation(storageExample);
     }
 
-    private static void printCountryPopulations(StorageExample storageExample) {
+    private static void printCountryPopulation(StorageExample storageExample) {
         storageExample.getCountryPopulation().forEach((country, people) -> {
             System.out.println("» Country - " + country);
             people.forEach(person -> System.out.println("     » " + person));
