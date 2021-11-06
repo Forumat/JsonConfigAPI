@@ -3,7 +3,6 @@ package eu.forumat.config.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.stream.JsonReader;
-import com.sun.istack.internal.NotNull;
 
 import java.io.File;
 import java.io.FileReader;
