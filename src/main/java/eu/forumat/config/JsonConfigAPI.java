@@ -17,7 +17,7 @@ public class JsonConfigAPI {
     private static final JsonConfigAPI INSTANCE = new JsonConfigAPI();
 
     private final JsonFileUtil jsonFileUtil = new JsonFileUtil();
-    private final Map<Class<?>, JsonConfigData> registeredConfigs = new HashMap<>();
+    @Getter private final Map<Class<?>, JsonConfigData> registeredConfigs = new HashMap<>();
 
     public void registerConfigsByAnnotation(Class<?> mainClass) {
         Reflections reflections = new Reflections(mainClass.getPackage().getName());
@@ -32,20 +32,20 @@ public class JsonConfigAPI {
         });
     }
 
-    public void registerConfig(Object config) {
+    public Object registerConfig(Object config) {
         Class<?> configClass = config.getClass();
         if (!configClass.isAnnotationPresent(JsonConfig.class)) {
             throw new IllegalArgumentException("Class " + configClass.getSimpleName() + " is missing a @JsonConfig annotation!");
         }
 
         JsonConfig configAnnotation = configClass.getAnnotation(JsonConfig.class);
-        registerConfig(new JsonConfigData(
+        return registerConfig(new JsonConfigData(
                 config,
                 new File(configAnnotation.path() + configAnnotation.name())
         ));
     }
 
-    public void registerConfig(JsonConfigData configData) {
+    public Object registerConfig(JsonConfigData configData) {
         Class<?> configClass = configData.getConfigObject().getClass();
         if (!configClass.isAnnotationPresent(JsonConfig.class)) {
             throw new IllegalArgumentException("Class " + configClass.getSimpleName() + " is missing a @JsonConfig annotation!");
@@ -53,15 +53,34 @@ public class JsonConfigAPI {
 
         registeredConfigs.put(configClass, configData);
         File file = configData.getConfigFile();
+        Object config;
         if (file.exists()) {
-            Object config = jsonFileUtil.loadByFile(configClass, file);
-            configData.setConfigObject(config);
+            config = jsonFileUtil.loadByFile(configClass, file);
         } else {
-            Object jsonConfig = configData.getConfigObject();
+            config = configData.getConfigObject();
             file.getParentFile().mkdirs();
-            jsonFileUtil.saveIntoFile(jsonConfig, file, true);
-            configData.setConfigObject(jsonConfig);
+            jsonFileUtil.saveIntoFile(config, file, true);
         }
+        configData.setConfigObject(config);
+        return config;
+    }
+
+    public void saveConfig(Object config) {
+        Class<?> configClass = config.getClass();
+        if (!registeredConfigs.containsKey(configClass)) {
+            throw new IllegalArgumentException("No config registered for class " + configClass.getSimpleName());
+        }
+
+        JsonConfigData configData = registeredConfigs.get(configClass);
+        File configFile = configData.getConfigFile();
+        if (!configFile.exists()) return;
+        configFile.delete();
+        jsonFileUtil.saveIntoFile(config, configFile, true);
+        configData.setConfigObject(config);
+    }
+
+    public <T> T getConfig(Class<?> configClass) {
+        return (T) registeredConfigs.get(configClass).getConfigObject();
     }
 
 
