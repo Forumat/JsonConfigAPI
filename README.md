@@ -13,7 +13,7 @@ Add the following to your **pom.xml**:
 <dependency>
     <groupId>com.github.Forumat</groupId>
     <artifactId>JsonConfigAPI</artifactId>
-    <version>0f5b7831f2</version>
+    <version>7a781e8</version>
     <scope>compile</scope>
 </dependency>
 ```
