@@ -47,9 +47,6 @@ public class JsonConfigAPI {
 
     public Object registerConfig(JsonConfigData configData) {
         Class<?> configClass = configData.getConfigObject().getClass();
-        if (!configClass.isAnnotationPresent(JsonConfig.class)) {
-            throw new IllegalArgumentException("Class " + configClass.getSimpleName() + " is missing a @JsonConfig annotation!");
-        }
 
         registeredConfigs.put(configClass, configData);
         File file = configData.getConfigFile();
