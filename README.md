@@ -13,7 +13,7 @@ Add the following to your **pom.xml**:
 <dependency>
     <groupId>com.github.Forumat</groupId>
     <artifactId>JsonConfigAPI</artifactId>
-    <version>0f5b7831f2</version>
+    <version>5bdf866f</version>
     <scope>compile</scope>
 </dependency>
 ```
@@ -26,7 +26,7 @@ repositories {
 ```
 ```
 dependencies {
-  implementation 'com.github.Forumat:JsonConfigAPI:Tag'
+  implementation 'com.github.Forumat:JsonConfigAPI:5bdf866f'
 }
 ```
 
