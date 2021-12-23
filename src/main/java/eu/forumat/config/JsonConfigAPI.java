@@ -50,8 +50,8 @@ public class JsonConfigAPI {
 
     public Object registerConfig(JsonConfigData configData) {
         Class<?> configClass = configData.getConfigObject().getClass();
-
         registeredConfigs.put(configClass, configData);
+
         File file = configData.getConfigFile();
         Object config;
         if (file.exists()) {
