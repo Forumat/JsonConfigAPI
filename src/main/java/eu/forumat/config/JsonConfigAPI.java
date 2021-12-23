@@ -6,6 +6,7 @@ import eu.forumat.config.util.JsonFileUtil;
 import lombok.Getter;
 import org.reflections.Reflections;
 import org.reflections.util.ClasspathHelper;
+import org.reflections.util.ConfigurationBuilder;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -20,9 +21,11 @@ public class JsonConfigAPI {
     @Getter private final Map<Class<?>, JsonConfigData> registeredConfigs = new HashMap<>();
 
     public void registerConfigsByAnnotation(Class<?> mainClass) {
-        Reflections reflections = new Reflections(mainClass.getPackage().getName());
-        ClasspathHelper.forPackage(mainClass.getPackage().getName(), mainClass.getClassLoader()).forEach(reflections::scan);
+        Reflections reflections = new Reflections(new ConfigurationBuilder().setUrls(ClasspathHelper.forPackage(
+                mainClass.getPackage().getName(), ClasspathHelper.contextClassLoader(),
+                ClasspathHelper.staticClassLoader())));
 
+        ClasspathHelper.forPackage(mainClass.getPackage().getName(), mainClass.getClassLoader()).forEach(reflections::scan);
         reflections.getTypesAnnotatedWith(JsonConfig.class).forEach(configClass -> {
             try {
                 registerConfig(configClass.getConstructor().newInstance());
